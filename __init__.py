@@ -19,9 +19,9 @@
 
 bl_info = {
     "name": "CrowdMaster",
-    "author": "Peter Noble, John Roper, Jake Dube, Patrick Crawford",
-    "version": (1, 3, 2),
-    "blender": (2, 78, 0),
+    "author": "Peter Noble, John Roper, Jake Dube, Patrick Crawford, Bryan Tam",
+    "version": (2, 0, 0),
+    "blender": (2, 80, 0),
     "location": "Node Editor > CrowdMaster Node Trees",
     "description": "Crowd Simulation for the Masses",
     "warning": "",
@@ -41,6 +41,8 @@ from bpy.types import Operator, Panel, UIList
 from . import addon_updater_ops, cm_prefs
 from .cm_blenderData import initialTagProperty, modifyBoneProperty
 from .cm_iconLoad import cicon, register_icons, unregister_icons
+
+# All Classes for registration
 
 # =============== GROUPS LIST START ===============#
 
@@ -91,7 +93,7 @@ class SCENE_OT_cm_groups_reset(Operator):
         if bpy.context.active_object is not None:
             bpy.ops.object.mode_set(mode='OBJECT')
         scene = context.scene
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
 
         group = scene.cm_groups.get(self.groupName)
         for obj in bpy.context.selected_objects:
@@ -196,7 +198,7 @@ class SCENE_OT_cm_agent_add_selected(Operator):
 
     def execute(self, context):
         scene = context.scene
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
 
         if self.groupName.strip() == "" or self.brainType.strip() == "":
             return {'CANCELLED'}
@@ -252,7 +254,7 @@ class SCENE_OT_cm_start(Operator):
         global customOutline
         global customRLines
 
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
         if (preferences.ask_to_save) and (bpy.data.is_dirty):
             self.report({'ERROR'}, "You must save your file first!")
             return {'CANCELLED'}
@@ -294,7 +296,7 @@ class SCENE_OT_cm_stop(Operator):
     bl_label = "Stop Simulation"
 
     def execute(self, context):
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
         global customSyncMode
         global customOutline
         global customRLines
@@ -323,7 +325,7 @@ class SCENE_PT_CrowdMaster(Panel):
     bl_label = "Main"
     bl_idname = "SCENE_PT_CrowdMaster"
     bl_space_type = 'NODE_EDITOR'
-    bl_region_type = 'TOOLS'
+    bl_region_type = 'UI'
     bl_category = "CrowdMaster"
 
     @classmethod
@@ -336,7 +338,7 @@ class SCENE_PT_CrowdMaster(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
 
         row = layout.row()
         row.scale_y = 1.5
@@ -389,7 +391,7 @@ class SCENE_PT_CrowdMasterAgents(Panel):
     bl_label = "Agents"
     bl_idname = "SCENE_PT_CrowdMasterAgents"
     bl_space_type = 'NODE_EDITOR'
-    bl_region_type = 'TOOLS'
+    bl_region_type = 'UI'
     bl_category = "CrowdMaster"
 
     @classmethod
@@ -402,7 +404,7 @@ class SCENE_PT_CrowdMasterAgents(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
 
         row = layout.row()
         row.label("Group Name")
@@ -491,7 +493,7 @@ class SCENE_PT_CrowdMasterManualAgents(Panel):
     bl_label = "Manual Agents"
     bl_idname = "SCENE_PT_CrowdMasterManualAgents"
     bl_space_type = 'NODE_EDITOR'
-    bl_region_type = 'TOOLS'
+    bl_region_type = 'UI'
     bl_category = "CrowdMaster"
     bl_options = {'DEFAULT_CLOSED'}
 
@@ -505,7 +507,7 @@ class SCENE_PT_CrowdMasterManualAgents(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
 
         layout.prop(scene.cm_manual, "groupName", text="Group Name")
         layout.prop(scene.cm_manual, "brainType", text="Brain Type")
@@ -525,7 +527,6 @@ def nodeTreeSetFakeUser(scene):
             if not grp.savedOnce:
                 grp.savedOnce = True
                 grp.use_fake_user = True
-
 
 def register():
     global cm_documentation
@@ -599,7 +600,7 @@ def register():
     if nodeTreeSetFakeUser not in bpy.app.handlers.save_pre:
         bpy.app.handlers.save_pre.append(nodeTreeSetFakeUser)
 
-    preferences = bpy.context.user_preferences.addons[__package__].preferences
+    preferences = bpy.context.preferences.addons[__package__].preferences
     if preferences.show_debug_options:
         logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     else:

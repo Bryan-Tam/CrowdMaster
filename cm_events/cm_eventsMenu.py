@@ -115,7 +115,7 @@ class SCENE_PT_event(Panel):
     bl_label = "Events"
     bl_idname = "SCENE_PT_event"
     bl_space_type = 'NODE_EDITOR'
-    bl_region_type = 'TOOLS'
+    bl_region_type = 'UI'
     bl_category = "CrowdMaster"
     bl_options = {'DEFAULT_CLOSED'}
 

@@ -590,7 +590,7 @@ class SCENE_PT_path(Panel):
     bl_label = "Paths"
     bl_idname = "SCENE_PT_path"
     bl_space_type = 'NODE_EDITOR'
-    bl_region_type = 'TOOLS'
+    bl_region_type = 'UI'
     bl_category = "CrowdMaster"
     bl_options = {'DEFAULT_CLOSED'}
 

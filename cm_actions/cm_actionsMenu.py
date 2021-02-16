@@ -205,7 +205,7 @@ class SCENE_PT_action(Panel):
     bl_label = "Actions"
     bl_idname = "SCENE_PT_action"
     bl_space_type = 'NODE_EDITOR'
-    bl_region_type = 'TOOLS'
+    bl_region_type = 'UI'
     bl_category = "CrowdMaster"
 
     @classmethod

@@ -29,7 +29,6 @@ from .cm_iconLoad import cicon
 
 logger = logging.getLogger("CrowdMaster")
 
-
 class CMSavePrefs(Operator):
     """Save the CrowdMaster preferences """
     bl_idname = "scene.cm_save_prefs"
@@ -43,7 +42,7 @@ class CMSavePrefs(Operator):
 
 
 def updateLogger(self, context):
-    preferences = context.user_preferences.addons[__package__].preferences
+    preferences = context.preferences.addons[__package__].preferences
     if preferences.show_debug_options:
         logging.basicConfig(level=logging.DEBUG, format='%(message)s')
     else:
@@ -133,7 +132,7 @@ class CMPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
-        preferences = context.user_preferences.addons[__package__].preferences
+        preferences = context.preferences.addons[__package__].preferences
 
         row = layout.row()
         row.prop(preferences, "prefs_tab", expand=True)
@@ -210,7 +209,7 @@ class CMPreferences(AddonPreferences):
 
 
 def draw_cmweb_item(self, context):
-    preferences = context.user_preferences.addons[__package__].preferences
+    preferences = context.preferences.addons[__package__].preferences
     self.layout.separator()
     if preferences.use_custom_icons:
         self.layout.operator("wm.url_open", text="CrowdMaster Website", icon_value=cicon(
@@ -224,13 +223,14 @@ def draw_cmweb_item(self, context):
                              icon='URL').url = "mailto:crowdmaster@jmroper.com"
 
 
+
 def register():
     bpy.utils.register_class(CMSavePrefs)
     bpy.utils.register_class(CMPreferences)
-    bpy.types.INFO_MT_help.append(draw_cmweb_item)
+    bpy.types.TOPBAR_MT_help.append(draw_cmweb_item)
 
 
 def unregister():
     bpy.utils.unregister_class(CMSavePrefs)
     bpy.utils.unregister_class(CMPreferences)
-    bpy.types.INFO_MT_help.remove(draw_cmweb_item)
+    bpy.types.TOPBAR_MT_help.remove(draw_cmweb_item)
