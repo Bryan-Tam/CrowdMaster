@@ -47,7 +47,7 @@ class GeoSocket(NodeSocket):
     bl_label = 'Geo Node Socket'
 
     def draw(self, context, layout, node, text):
-        layout.label(text)
+        layout.label()
 
     def draw_color(self, context, node):
         return (0.125, 0.125, 0.575, 1.0)
@@ -59,7 +59,7 @@ class TemplateSocket(NodeSocket):
     bl_label = 'Template Node Socket'
 
     def draw(self, context, layout, node, text):
-        layout.label(text)
+        layout.label()
 
     def draw_color(self, context, node):
         return (0.125, 0.575, 0.125, 1.0)
@@ -82,7 +82,7 @@ class GenerateNode(CrowdMasterAGenTreeNode):
         self.inputs[0].link_limit = 4095
 
     def draw_buttons(self, context, layout):
-        preferences = context.preferences.addons["CrowdMaster"].preferences
+        preferences = context.preferences.addons[__package__.split(".", 1)[0]].preferences
         layout.scale_y = 1.5
         if preferences.use_custom_icons:
             oper = layout.operator("scene.cm_agent_nodes_generate",
@@ -109,7 +109,7 @@ class AddToGroupNode(CrowdMasterAGenTreeNode):
         self.outputs.new("TemplateSocketType", "Template")
 
     def draw_buttons(self, context, layout):
-        layout.label("Group name:")
+        layout.label(text="Group name:")
         layout.prop(self, "groupName", text="cm_")
 
     def getSettings(self):
@@ -326,7 +326,7 @@ class ParentNode(CrowdMasterAGenTreeNode):
         if self.parentMode == "bone":
             layout.prop(self, "parentTo")
         else:
-            layout.label("Bind To:")
+            layout.label(text="Bind To:")
             row = layout.row(align=True)
             row.prop(self, "bindToVGroups")
             row.prop(self, "bindToBEnvelopes")

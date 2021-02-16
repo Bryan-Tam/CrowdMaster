@@ -131,7 +131,7 @@ class SCENE_PT_event(Panel):
 
         row = layout.row()
 
-        row.label("Events")
+        row.label(text="Events")
 
         row = layout.row()
 

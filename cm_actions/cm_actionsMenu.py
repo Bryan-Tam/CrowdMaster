@@ -219,10 +219,10 @@ class SCENE_PT_action(Panel):
         layout = self.layout
 
         row = layout.row()
-        row.label("Name")
-        row.label("Armature Action")
-        row.label("Motion Action")
-        row.label("Groups")
+        row.label(text="Name")
+        row.label(text="Armature Action")
+        row.label(text="Motion Action")
+        row.label(text="Groups")
 
         row = layout.row()
 
@@ -244,11 +244,11 @@ class SCENE_PT_action(Panel):
         sub.operator(blid_am, text="", icon="TRIA_UP").direction = 'UP'
         sub.operator(blid_am, text="", icon="TRIA_DOWN").direction = 'DOWN'
 
-        layout.label("Action pairings:")
+        layout.label(text="Action pairings:")
         row = layout.row()
 
-        row.label("Source")
-        row.label("Target")
+        row.label(text="Source")
+        row.label(text="Target")
 
         row = layout.row()
 

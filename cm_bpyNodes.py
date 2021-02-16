@@ -67,7 +67,7 @@ class DefaultSocket(NodeSocket):
                     row.label(text)
             else:
                 if self.is_linked:
-                    row.prop(self, "filterProperty", text=text)
+                    row.prop(self, "filterProperty", text)
                 else:
                     row.prop(self, "defaultValueProperty", text="")
                 if preferences.use_custom_icons:
@@ -771,7 +771,7 @@ class StartState(StateNode):
 
     def draw_buttons(self, context, layout):
         row = layout.row()
-        row.label("Random wait time:")
+        row.label(text="Random wait time:")
         row = layout.row(align=True)
         row.prop(self, "minRandWait")
         row.prop(self, "maxRandWait")

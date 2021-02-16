@@ -178,8 +178,7 @@ class CMPreferences(AddonPreferences):
                 row.prop(preferences, 'show_debug_timings', icon='TIME')
             else:
                 row = layout.row()
-                row.label(
-                    "Enable Show Debug Options to access these settings (only for developers).")
+                row.label(text="Enable Show Debug Options to access these settings (only for developers).")
 
                 row = layout.row()
                 if preferences.use_custom_icons:

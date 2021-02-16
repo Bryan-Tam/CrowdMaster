@@ -1058,6 +1058,7 @@ class TemplateVCOLPOSITIONING(Template):
             if self.settings["relax"]:
                 sce = bpy.context.scene
                 gnd = sce.objects[self.settings["guideMesh"]]
+                despgraph = bpy.context.evaluated_despgraph_get()
                 if self.bvhtree is None:
                     self.bvhtree = BVHTree.FromObject(gnd, sce)
                 radius = self.settings["relaxRadius"]

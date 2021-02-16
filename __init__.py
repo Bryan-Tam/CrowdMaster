@@ -54,11 +54,11 @@ class SCENE_UL_group(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data,
                   active_propname):
-        # layout.label(item.name)
+        # layout.label(text=item.name)
         op = layout.operator(SCENE_OT_CrowdMasterSelectGroup.bl_idname,
                              text=item.name)
         op.groupName = item.name
-        layout.label(str(item.totalAgents) + " | " + item.groupType)
+        layout.label(text=str(item.totalAgents) + " | " + item.groupType)
         if item.freezePlacement:
             if item.freezeAnimation:
                 label = "Anim frozen"
@@ -66,7 +66,7 @@ class SCENE_UL_group(UIList):
                 label = "Geo frozen"
         else:
             label = "Unlocked"
-        layout.label(label)
+        layout.label(text=label)
 
 
 class SCENE_UL_agent_type(UIList):
@@ -75,8 +75,8 @@ class SCENE_UL_agent_type(UIList):
 
     def draw_item(self, context, layout, data, item, icon, active_data,
                   active_propname):
-        layout.label(item.name)
-        layout.label(str(len(item.agents)))
+        layout.label(text=item.name)
+        layout.label(text=str(len(item.agents)))
 
 
 class SCENE_OT_cm_groups_reset(Operator):
@@ -407,9 +407,9 @@ class SCENE_PT_CrowdMasterAgents(Panel):
         preferences = context.preferences.addons[__package__].preferences
 
         row = layout.row()
-        row.label("Group Name")
-        row.label("Number | Origin")
-        row.label("Status")
+        row.label(text="Group Name")
+        row.label(text="Number | Origin")
+        row.label(text="Status")
 
         layout.template_list("SCENE_UL_group", "", scene,
                              "cm_groups", scene, "cm_groups_index")
@@ -431,7 +431,7 @@ class SCENE_PT_CrowdMasterAgents(Panel):
                                   "agentTypes", scene, "cm_view_details_index")
 
                 if group.name == "cm":
-                    box.label("cm: To freeze use add to group")
+                    box.label(text="cm: To freeze use add to group")
                 else:
                     if group.groupType == "auto":
                         box.prop(group, "freezePlacement")
@@ -446,7 +446,7 @@ class SCENE_PT_CrowdMasterAgents(Panel):
                     op = box.operator(SCENE_OT_cm_groups_reset.bl_idname)
                 op.groupName = group.name
             else:
-                box.label("No group selected")
+                box.label(text="No group selected")
 
 
 class SCENE_OT_CrowdMasterSelectGroup(Operator):
