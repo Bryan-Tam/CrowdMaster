@@ -955,8 +955,9 @@ class TemplateMESHPOSITIONING(Template):
         if self.settings["relax"]:
             sce = bpy.context.scene
             gnd = sce.objects[self.settings["guideMesh"]]
+            dg = context.evaluated_depsgraph_get()
             if self.bvhtree is None:
-                self.bvhtree = BVHTree.FromObject(gnd, sce)
+                self.bvhtree = BVHTree.FromObject(gnd, dg)
             radius = self.settings["relaxRadius"]
             for i in range(self.settings["relaxIterations"]):
                 kd = KDTree(len(positions))
@@ -1006,7 +1007,7 @@ class TemplateVCOLPOSITIONING(Template):
         self.bvhtree = None
         self.totalArea = None
 
-    def build(self, buildRequest):
+    def build(self, buildRequest, context):
         t = time.time()
         paintMode = self.settings["paintMode"]
         guide = bpy.data.objects[self.settings["guideMesh"]]
@@ -1016,26 +1017,32 @@ class TemplateVCOLPOSITIONING(Template):
         mesh = data
 
         vcol_layer = mesh.vertex_colors[self.settings["vcols"]]
-
+        print("VCOL " + str(self.settings["vcols"]))
         for poly in mesh.polygons:
             for loop_index in poly.loop_indices:
                 loop_vert_index = mesh.loops[loop_index].vertex_index
                 if not invert:
                     if vcol_layer.data[loop_index].color == self.settings["vcolor"]:
+                        print("MATCH")
                         polys.append(poly)
                 else:
                     if not vcol_layer.data[loop_index].color == self.settings["vcolor"]:
+                        print("MATCH2")
                         polys.append(poly)
 
         wrld = guide.matrix_world
         if self.totalArea is None:
             self.totalArea = sum(p.area for p in polys)
 
+        print(polys)
         if paintMode == 'place':
+            print("PAINTMD")
             positions = []
             for n in range(self.settings["noToPlace"]):
                 remaining = random.random() * self.totalArea
-                index = 0
+                print(remaining)
+                print(self.totalArea)
+                
                 while remaining > 0:
                     remaining -= polys[index].area
                     if remaining <= 0:
@@ -1053,14 +1060,17 @@ class TemplateVCOLPOSITIONING(Template):
                             pos *= buildRequest.scale
                             pos = buildRequest.pos + pos
                         positions.append(pos)
+                        #print(pos)
                     index += 1
-
+                print("-----")
+            #print(positions)
             if self.settings["relax"]:
                 sce = bpy.context.scene
+                dg = context.evaluated_depsgraph_get()
                 gnd = sce.objects[self.settings["guideMesh"]]
-                despgraph = bpy.context.evaluated_despgraph_get()
+                print(gnd)
                 if self.bvhtree is None:
-                    self.bvhtree = BVHTree.FromObject(gnd, sce)
+                    self.bvhtree = BVHTree.FromObject(gnd, dg)
                 radius = self.settings["relaxRadius"]
                 for n, p in enumerate(positions):
                     rvec = random.random() * mathutils.noise.random_unit_vector()
@@ -1093,9 +1103,10 @@ class TemplateVCOLPOSITIONING(Template):
 
         elif paintMode == 'edit':
             sce = bpy.context.scene
+            dg = context.evaluated_depsgraph_get()
             gnd = sce.objects[self.settings["guideMesh"]]
             if self.bvhtree is None:
-                self.bvhtree = BVHTree.FromObject(gnd, sce)
+                self.bvhtree = BVHTree.FromObject(gnd, dg)
 
             point = buildRequest.pos
             loc, norm, ind, dist = self.bvhtree.find_nearest(point)
@@ -1112,6 +1123,7 @@ class TemplateVCOLPOSITIONING(Template):
                 else:
                     if not vcol_layer.data[loop_index].color == self.settings["vcolor"]:
                         self.inputs["Template"].build(buildRequest)
+        print("DONE GENERATING")
 
     def check(self):
         if "Template" not in self.inputs:
@@ -1407,9 +1419,10 @@ class TemplateGROUND(Template):
     def build(self, buildRequest):
         t = time.time()
         sce = bpy.context.scene
+        dg = context.evaluated_depsgraph_get()
         gnd = sce.objects[self.settings["groundMesh"]]
         if self.bvhtree is None:
-            self.bvhtree = BVHTree.FromObject(gnd, sce)
+            self.bvhtree = BVHTree.FromObject(gnd, dg)
 
         inverseTransform = gnd.matrix_world.inverted()
         point = (inverseTransform * buildRequest.pos.to_4d()).to_3d()

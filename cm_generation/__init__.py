@@ -110,7 +110,7 @@ class SCENE_OT_agent_nodes_generate(Operator):
                 if tipNode.bl_idname == "NodeReroute":
                     tipNode = self.getInput(tipNode.inputs[0])
                 buildRequest = TemplateRequest()
-                genSpaces[tipNode].build(buildRequest)
+                genSpaces[tipNode].build(buildRequest, context)
         else:
             return {'CANCELLED'}
         cm_timings.placement["Build"] += time.time() - t
